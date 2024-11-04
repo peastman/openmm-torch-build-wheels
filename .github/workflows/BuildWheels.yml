@@ -73,7 +73,8 @@ jobs:
           mkdir build
           cd build
           export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
-          ls /usr/local/cuda
+          c++ --version
+          /opt/rocm/bin/amdclang++ --version
           cmake .. \
             -DCMAKE_INSTALL_PREFIX=${SITE_PACKAGES}/OpenMM.libs \
             -DCMAKE_C_COMPILER=/opt/rocm/bin/amdclang \
