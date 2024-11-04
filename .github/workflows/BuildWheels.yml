@@ -78,11 +78,12 @@ jobs:
             -DCMAKE_C_COMPILER=/opt/rocm/bin/amdclang \
             -DCMAKE_CXX_COMPILER=/opt/rocm/bin/amdclang++ \
             -DCMAKE_CUDA_ARCHITECTURES=OFF \
-            -DCMAKE_CUDA_COMPILER="/usr/local/cuda/bin/nvcc --allow-unsupported-compiler" \
+            -DCMAKE_CUDA_COMPILER="/usr/local/cuda/bin/nvcc \
             -DCMAKE_CUDA_HOST_COMPILER=c++ \
             -DOPENMM_DIR=${SITE_PACKAGES}/OpenMM.libs \
             -DTorch_DIR=${SITE_PACKAGES}/torch/share/cmake/Torch \
             -DCMAKE_CXX_FLAGS='-D_GLIBCXX_USE_CXX11_ABI=0' \
+            -DNN_BUILD_CUDA_LIB=OFF \
             -DOPENCL_INCLUDE_DIR=/usr/include/CL \
             -DOPENCL_LIBRARY=/usr/lib64/libOpenCL.so.1
 
