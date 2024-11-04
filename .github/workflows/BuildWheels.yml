@@ -73,14 +73,12 @@ jobs:
           mkdir build
           cd build
           export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
-          c++ --version
-          /opt/rocm/bin/amdclang++ --version
           cmake .. \
             -DCMAKE_INSTALL_PREFIX=${SITE_PACKAGES}/OpenMM.libs \
             -DCMAKE_C_COMPILER=/opt/rocm/bin/amdclang \
             -DCMAKE_CXX_COMPILER=/opt/rocm/bin/amdclang++ \
             -DCMAKE_CUDA_ARCHITECTURES=OFF \
-            -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc \
+            -DCMAKE_CUDA_COMPILER="/usr/local/cuda/bin/nvcc --allow-unsupported-compiler" \
             -DCMAKE_CUDA_HOST_COMPILER=c++ \
             -DOPENMM_DIR=${SITE_PACKAGES}/OpenMM.libs \
             -DTorch_DIR=${SITE_PACKAGES}/torch/share/cmake/Torch \
