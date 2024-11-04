@@ -78,7 +78,7 @@ jobs:
             -DCMAKE_C_COMPILER=/opt/rocm/bin/amdclang \
             -DCMAKE_CXX_COMPILER=/opt/rocm/bin/amdclang++ \
             -DCMAKE_CUDA_ARCHITECTURES=OFF \
-            -DCMAKE_CUDA_COMPILER="/usr/local/cuda/bin/nvcc \
+            -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc \
             -DCMAKE_CUDA_HOST_COMPILER=c++ \
             -DOPENMM_DIR=${SITE_PACKAGES}/OpenMM.libs \
             -DTorch_DIR=${SITE_PACKAGES}/torch/share/cmake/Torch \
