@@ -1,7 +1,7 @@
 name: OpenMM-Torch-Build-Wheels
 
 env:
-  GIT_REVISION: 'main'
+  GIT_REVISION: 'master'
   VERSION_SUFFIX: ''
 
 on:
