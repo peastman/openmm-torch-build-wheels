@@ -73,8 +73,10 @@ jobs:
           mkdir build
           cd build
           export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0]))
+          echo $SITE_PACKAGES
           cmake .. \
             -DCMAKE_INSTALL_PREFIX=${SITE_PACKAGES}/OpenMM.libs \
+            -DCMAKE_CXX_COMPILER=/opt/rocm/bin/amdclang++ \
             -DOPENMM_DIR=${SITE_PACKAGES}/OpenMM.libs \
             -DTorch_DIR=${SITE_PACKAGES}/torch/share/cmake/Torch \
             -DCMAKE_CXX_FLAGS='-D_GLIBCXX_USE_CXX11_ABI=0' \
