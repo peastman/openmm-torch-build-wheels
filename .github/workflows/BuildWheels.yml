@@ -73,11 +73,13 @@ jobs:
           mkdir build
           cd build
           export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
+          ls /usr/local/cuda
           cmake .. \
             -DCMAKE_INSTALL_PREFIX=${SITE_PACKAGES}/OpenMM.libs \
             -DCMAKE_C_COMPILER=/opt/rocm/bin/amdclang \
             -DCMAKE_CXX_COMPILER=/opt/rocm/bin/amdclang++ \
             -DCMAKE_CUDA_ARCHITECTURES=OFF \
+            -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc \
             -DOPENMM_DIR=${SITE_PACKAGES}/OpenMM.libs \
             -DTorch_DIR=${SITE_PACKAGES}/torch/share/cmake/Torch \
             -DCMAKE_CXX_FLAGS='-D_GLIBCXX_USE_CXX11_ABI=0' \
