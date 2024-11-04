@@ -72,7 +72,7 @@ jobs:
           cd openmm-torch
           mkdir build
           cd build
-          export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0]))
+          export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
           echo $SITE_PACKAGES
           cmake .. \
             -DCMAKE_INSTALL_PREFIX=${SITE_PACKAGES}/OpenMM.libs \
