@@ -98,7 +98,7 @@ jobs:
           pip wheel -w dist .
           export LD_LIBRARY_PATH=${HOME}/openmm-install/lib
           cd dist
-          export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0]))
+          export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
           python $GITHUB_WORKSPACE/devtools/scripts/add_plugins_and_headers.py "${SITE_PACKAGES}/OpenMM.libs" "!CUDA" "!HIP"
           auditwheel repair -w fixed -L ".libs/lib" --plat manylinux_2_28_x86_64 *.whl \
             --exclude libOpenMM.so \
