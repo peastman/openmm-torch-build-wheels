@@ -105,6 +105,9 @@ jobs:
             --exclude libOpenMMTorch.so \
             --exclude libOpenMMHIP.so \
             --exclude libOpenMMOpenCL.so \
+            --exclude libOpenMMDrude.so \
+            --exclude libOpenMMAmoeba.so \
+            --exclude libOpenMMRPMD.so \
             --exclude libOpenCL.so.1 \
             --exclude libtorch.so \
             --exclude libtorch_cpu.so \
