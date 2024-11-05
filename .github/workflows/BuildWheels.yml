@@ -153,22 +153,22 @@ jobs:
 #        run: |
 #          python $GITHUB_WORKSPACE/devtools/scripts/rename_wheels.py $GITHUB_WORKSPACE/openmm/build/python/dist/fixed
 #
-#      - name: "Test the wheel"
-#        shell: bash -l {0}
-#        run: |
-#          set -x
-#          python -m venv "${HOME}/test_env"
-#          source "${HOME}/test_env/bin/activate"
-#          cd openmm-torch/build/python/dist
-#          export CUDA_VERSION=$(cut -d '-' -f1 <<< ${{ matrix.cuda-version }})
-#          pip install --pre -f fixed openmm[cuda${CUDA_VERSION},hip${{ matrix.hip-version }}]
-#          python -m openmm.testInstallation
-#          python -c "import openmm as mm; print(mm.version.openmm_library_path)"
-#          python -c "import openmm as mm; print('---Loaded---', *mm.pluginLoadedLibNames, '---Failed---', *mm.Platform.getPluginLoadFailures(), sep='\n')"
-#
-#      - name: "Upload the wheel"
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: openmm-torch-wheel-linux-${{matrix.python-version}}
-#          path: openmm-torch/build/python/dist/fixed
-#          retention-days: 10
+      - name: "Test the wheel"
+        shell: bash -l {0}
+        run: |
+          set -x
+          python -m venv "${HOME}/test_env"
+          source "${HOME}/test_env/bin/activate"
+          cd openmm-torch/build/python/dist
+          export CUDA_VERSION=$(cut -d '-' -f1 <<< ${{ matrix.cuda-version }})
+          pip install --pre -f fixed openmm
+          cd
+          cd openmm-torch/python/tests
+          pytest *
+
+      - name: "Upload the wheel"
+        uses: actions/upload-artifact@v4
+        with:
+          name: openmm-torch-wheel-linux-${{matrix.python-version}}
+          path: openmm-torch/build/python/dist/fixed
+          retention-days: 10

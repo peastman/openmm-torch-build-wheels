@@ -3,6 +3,7 @@ pybind11
 cmake
 swig
 numpy
+pytest
 delocate
 wheel
 auditwheel
