@@ -67,6 +67,7 @@ jobs:
           git clone https://github.com/openmm/openmm-torch.git
           cd openmm-torch
           git checkout $GIT_REVISION
+          git apply $GITHUB_WORKSPACE/devtools/patches/cxx11_abi.patch
 
       - name: "Configure build with CMake"
         shell: bash -l {0}
