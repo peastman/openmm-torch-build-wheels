@@ -54,11 +54,11 @@ jobs:
 #                         cuda-libraries-${{ matrix.cuda-version }}.${{ matrix.cuda-arch }} \
 #                         cuda-libraries-devel-${{ matrix.cuda-version }}.${{ matrix.cuda-arch }}
 
-      - name: "Install HIP"
-        run: |
-          yum install -y epel-release
-          yum install -y https://repo.radeon.com/amdgpu-install/6.2.2/el/8.10/amdgpu-install-6.2.60202-1.el8.noarch.rpm
-          yum install -y rocm-device-libs hip-devel hip-runtime-amd hipcc
+#      - name: "Install HIP"
+#        run: |
+#          yum install -y epel-release
+#          yum install -y https://repo.radeon.com/amdgpu-install/6.2.2/el/8.10/amdgpu-install-6.2.60202-1.el8.noarch.rpm
+#          yum install -y rocm-device-libs hip-devel hip-runtime-amd hipcc
 
       - name: "Check out OpenMM-Torch source code"
         run: |
@@ -75,15 +75,9 @@ jobs:
           export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
           cmake .. \
             -DCMAKE_INSTALL_PREFIX=${SITE_PACKAGES}/OpenMM.libs \
-            -DCMAKE_C_COMPILER=/opt/rocm/bin/amdclang \
-            -DCMAKE_CXX_COMPILER=/opt/rocm/bin/amdclang++ \
-            -DCMAKE_CUDA_ARCHITECTURES=OFF \
-            -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc \
-            -DCMAKE_CUDA_HOST_COMPILER=c++ \
             -DOPENMM_DIR=${SITE_PACKAGES}/OpenMM.libs \
             -DTorch_DIR=${SITE_PACKAGES}/torch/share/cmake/Torch \
             -DCMAKE_CXX_FLAGS='-D_GLIBCXX_USE_CXX11_ABI=0' \
-            -DNN_BUILD_CUDA_LIB=OFF \
             -DOPENCL_INCLUDE_DIR=/usr/include/CL \
             -DOPENCL_LIBRARY=/usr/lib64/libOpenCL.so.1
 
