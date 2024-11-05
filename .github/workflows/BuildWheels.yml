@@ -42,7 +42,7 @@ jobs:
       - name: "Install dependencies with pip"
         shell: bash -l {0}
         run: |
-          pip install -v -r devtools/requirements/${{ matrix.requirements }}.txt
+          pip install -v -r --pre devtools/requirements/${{ matrix.requirements }}.txt
           pip install -v torch --index-url https://download.pytorch.org/whl/cpu
 
       - name: "Install dependencies with yum"
@@ -82,7 +82,6 @@ jobs:
             -DCMAKE_CXX_FLAGS='-D_GLIBCXX_USE_CXX11_ABI=0' \
             -DOPENCL_INCLUDE_DIR=/usr/include/CL \
             -DOPENCL_LIBRARY=/usr/lib64/libOpenCL.so.1
-          ls -R ${SITE_PACKAGES}/OpenMM.libs/include
 
       - name: "Build OpenMM-Torch"
         shell: bash -l {0}
