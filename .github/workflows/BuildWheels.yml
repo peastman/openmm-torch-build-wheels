@@ -161,7 +161,7 @@ jobs:
           source "${HOME}/test_env/bin/activate"
           cd openmm-torch/build
           export CUDA_VERSION=$(cut -d '-' -f1 <<< ${{ matrix.cuda-version }})
-          pip install --pre -f python/dist/fixed openmm
+          pip install --pre -f python/dist/fixed openmmtorch
           python -c 'import openmmtorch; f = openmmtorch.TorchForce('tests/forces.pt')'
 
       - name: "Upload the wheel"
