@@ -108,6 +108,7 @@ jobs:
             --exclude libOpenCL.so.1 \
             --exclude libtorch_cpu.so \
             --exclude libtorch_gpu.so \
+            --exclude libc10.so \
             --exclude libcuda.so.1 \
             --exclude libcufft.so.11 \
             --exclude libcufft.so.10 \
