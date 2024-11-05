@@ -93,11 +93,11 @@ jobs:
       - name: "Build wheel"
         shell: bash -l {0}
         run: |
-          cd openmm-torch/build
+          cd openmm-torch/build/python
           export CUDA_VERSION=$(cut -d '-' -f1 <<< ${{ matrix.cuda-version }})
-          make PythonBdistWheel
+          pip wheel -w dist .
           export LD_LIBRARY_PATH=${HOME}/openmm-install/lib
-          cd python/dist
+          cd dist
           export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0]))
           python $GITHUB_WORKSPACE/devtools/scripts/add_plugins_and_headers.py "${SITE_PACKAGES}/OpenMM.libs" "!CUDA" "!HIP"
           auditwheel repair -w fixed -L ".libs/lib" --plat manylinux_2_28_x86_64 *.whl \
