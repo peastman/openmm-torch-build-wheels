@@ -164,7 +164,7 @@ jobs:
           pip install --pre -f fixed openmm
           cd
           cd openmm-torch/python/tests
-          pytest *
+          pytest --import-mode=importlib *
 
       - name: "Upload the wheel"
         uses: actions/upload-artifact@v4
