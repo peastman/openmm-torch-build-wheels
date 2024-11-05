@@ -1,5 +1,4 @@
 openmm
-torch
 pybind11
 cmake
 swig
