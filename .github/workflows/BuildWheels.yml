@@ -49,12 +49,12 @@ jobs:
         run: |
           yum -y install zip opencl-headers ocl-icd
 
-#      - name: "Install CUDA"
-#        run: |
-#          dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel8/${{ matrix.cuda-arch }}/cuda-rhel8.repo
-#          dnf -y install cuda-compiler-${{ matrix.cuda-version }}.${{ matrix.cuda-arch }} \
-#                         cuda-libraries-${{ matrix.cuda-version }}.${{ matrix.cuda-arch }} \
-#                         cuda-libraries-devel-${{ matrix.cuda-version }}.${{ matrix.cuda-arch }}
+      - name: "Install CUDA"
+        run: |
+          dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel8/${{ matrix.cuda-arch }}/cuda-rhel8.repo
+          dnf -y install cuda-compiler-${{ matrix.cuda-version }}.${{ matrix.cuda-arch }} \
+                         cuda-libraries-${{ matrix.cuda-version }}.${{ matrix.cuda-arch }} \
+                         cuda-libraries-devel-${{ matrix.cuda-version }}.${{ matrix.cuda-arch }}
 
 #      - name: "Install HIP"
 #        run: |
@@ -68,6 +68,7 @@ jobs:
           cd openmm-torch
           git checkout $GIT_REVISION
           git apply $GITHUB_WORKSPACE/devtools/patches/cxx11_abi.patch
+          git apply $GITHUB_WORKSPACE/devtools/patches/extras_require.patch
 
       - name: "Configure build with CMake"
         shell: bash -l {0}
@@ -132,16 +133,18 @@ jobs:
             --exclude libhiprtc.so.6 \
             --exclude libamdhip64.so.6
 
-#      - name: "Build CUDA wheel"
-#        shell: bash -l {0}
-#        run: |
-#          cd $GITHUB_WORKSPACE/devtools/cuda
-#          export OPENMM_VERSION=$(echo $(grep "OPENMM_VERSION:" $GITHUB_WORKSPACE/openmm/build/CMakeCache.txt) | cut -d '=' -f2)$VERSION_SUFFIX
-#          export CUDA_VERSION=$(cut -d '-' -f1 <<< ${{ matrix.cuda-version }})
-#          python setup.py bdist_wheel
-#          cd dist
-#          python $GITHUB_WORKSPACE/devtools/scripts/add_plugins_and_headers.py "${HOME}/openmm-install" "CUDA"
-#          mv *.whl $GITHUB_WORKSPACE/openmm/build/python/dist/fixed
+      - name: "Build CUDA wheel"
+        shell: bash -l {0}
+        run: |
+          cd $GITHUB_WORKSPACE/devtools/cuda
+          export OPENMM_TORCH_VERSION=$(echo $(grep "OPENMM_TORCH_VERSION:" $GITHUB_WORKSPACE/openmm-torch/build/CMakeCache.txt) | cut -d '=' -f2)$VERSION_SUFFIX
+          export CUDA_VERSION=$(cut -d '-' -f1 <<< ${{ matrix.cuda-version }})
+          export HIP_VERSION=${{ matrix.hip-version }}
+          pip wheel -w dist .
+          cd dist
+          export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
+          python $GITHUB_WORKSPACE/devtools/scripts/add_plugins_and_headers.py "${SITE_PACKAGES}/OpenMM.libs" "CUDA"
+          mv *.whl $GITHUB_WORKSPACE/openmm/build/python/dist/fixed
 #
 #      - name: "Build HIP wheel"
 #        shell: bash -l {0}
@@ -151,7 +154,8 @@ jobs:
 #          export HIP_VERSION=${{ matrix.hip-version }}
 #          python setup.py bdist_wheel
 #          cd dist
-#          python $GITHUB_WORKSPACE/devtools/scripts/add_plugins_and_headers.py "${HOME}/openmm-install" "HIP"
+#          export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
+#          python $GITHUB_WORKSPACE/devtools/scripts/add_plugins_and_headers.py "${SITE_PACKAGES}/OpenMM.libs" "HIP"
 #          mv *.whl $GITHUB_WORKSPACE/openmm/build/python/dist/fixed
 #
 #      - name: "Rename wheels"
@@ -167,7 +171,7 @@ jobs:
           source "${HOME}/test_env/bin/activate"
           cd openmm-torch/build
           export CUDA_VERSION=$(cut -d '-' -f1 <<< ${{ matrix.cuda-version }})
-          pip install --pre -f python/dist/fixed openmmtorch
+          pip install --pre -f python/dist/fixed openmmtorch[cuda${CUDA_VERSION}]
           python -c "import openmmtorch; f = openmmtorch.TorchForce('tests/forces.pt')"
 
       - name: "Upload the wheel"
