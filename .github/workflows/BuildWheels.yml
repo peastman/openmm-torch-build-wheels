@@ -144,7 +144,7 @@ jobs:
           cd dist
           export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
           python $GITHUB_WORKSPACE/devtools/scripts/add_plugins_and_headers.py "${SITE_PACKAGES}/OpenMM.libs" "CUDA"
-          mv *.whl $GITHUB_WORKSPACE/openmm/build/python/dist/fixed
+          mv *.whl $GITHUB_WORKSPACE/openmm-torch/build/python/dist/fixed
 #
 #      - name: "Build HIP wheel"
 #        shell: bash -l {0}
@@ -156,12 +156,12 @@ jobs:
 #          cd dist
 #          export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
 #          python $GITHUB_WORKSPACE/devtools/scripts/add_plugins_and_headers.py "${SITE_PACKAGES}/OpenMM.libs" "HIP"
-#          mv *.whl $GITHUB_WORKSPACE/openmm/build/python/dist/fixed
+#          mv *.whl $GITHUB_WORKSPACE/openmm-torch/build/python/dist/fixed
 #
 #      - name: "Rename wheels"
 #        shell: bash -l {0}
 #        run: |
-#          python $GITHUB_WORKSPACE/devtools/scripts/rename_wheels.py $GITHUB_WORKSPACE/openmm/build/python/dist/fixed
+#          python $GITHUB_WORKSPACE/devtools/scripts/rename_wheels.py $GITHUB_WORKSPACE/openmm-torch/build/python/dist/fixed
 #
       - name: "Test the wheel"
         shell: bash -l {0}
