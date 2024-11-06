@@ -123,6 +123,7 @@ jobs:
             --exclude libcublas.so.12 \
             --exclude libcublasLt.so.12 \
             --exclude libcudnn.so.9 \
+            --exclude libcupti.so.12 \
             --exclude libcusolver.so.11 \
             --exclude libnccl.so.2 \
             --exclude libnvrtc.so.11.2 \
