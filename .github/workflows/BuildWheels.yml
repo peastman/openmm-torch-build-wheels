@@ -1,7 +1,7 @@
 name: OpenMM-Torch-Build-Wheels
 
 env:
-  GIT_REVISION: 'master'
+  GIT_REVISION: 'wheels'
   VERSION_SUFFIX: ''
 
 on:
@@ -64,7 +64,7 @@ jobs:
 
       - name: "Check out OpenMM-Torch source code"
         run: |
-          git clone https://github.com/openmm/openmm-torch.git
+          git clone https://github.com/peastman/openmm-torch.git
           cd openmm-torch
           git checkout $GIT_REVISION
           git apply $GITHUB_WORKSPACE/devtools/patches/cxx11_abi.patch
