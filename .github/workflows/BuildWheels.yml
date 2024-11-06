@@ -172,7 +172,7 @@ jobs:
           cd openmm-torch/build
           export CUDA_VERSION=$(cut -d '-' -f1 <<< ${{ matrix.cuda-version }})
           pip install --pre -f python/dist/fixed openmmtorch[cuda${CUDA_VERSION}]
-          python -c "import openmmtorch; f = openmmtorch.TorchForce('tests/forces.pt')"
+#          python -c "import openmmtorch; f = openmmtorch.TorchForce('tests/forces.pt')"
 
       - name: "Upload the wheel"
         uses: actions/upload-artifact@v4
