@@ -43,7 +43,7 @@ jobs:
         shell: bash -l {0}
         run: |
           pip install -v --pre -r devtools/requirements/${{ matrix.requirements }}.txt
-          pip install -v torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -v torch
 
       - name: "Install dependencies with yum"
         run: |
