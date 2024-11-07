@@ -25,7 +25,7 @@ jobs:
           - name: Linux x86
             os: ubuntu-latest
             requirements: linux
-            cuda-version: "12-6"
+            cuda-version: "12-4"
             cuda-arch: "x86_64"
             hip-version: "6"
 
