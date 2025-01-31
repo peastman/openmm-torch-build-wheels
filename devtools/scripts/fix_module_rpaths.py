@@ -6,13 +6,10 @@ import subprocess
 site_packages = site.getsitepackages()[0]
 for filename in os.listdir('.'):
     if filename.endswith('.whl'):
-        print('filename:', filename)
         with wheeltools.InWheel(filename, filename):
             for libname in os.listdir('.'):
                 if libname.startswith('_openmmtorch') and libname.endswith('.so'):
                     result = subprocess.run(['patchelf', '--print-rpath', libname], check=True, capture_output=True)
                     rpath = result.stdout.decode().strip().split(':')
-                    print(rpath)
                     rpath = [r.replace(site_packages, '$ORIGIN') for r in rpath]
-                    print(rpath)
                     subprocess.run(['patchelf', '--force-rpath', '--set-rpath', ':'.join(rpath), libname], check=True)
