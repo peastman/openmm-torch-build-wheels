@@ -99,9 +99,9 @@ jobs:
         shell: bash -l {0}
         run: |
           export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
-          patchelf --set-rpath '$ORIGIN:$ORIGIN/../../../torch/lib' ${SITE_PACKAGES}/OpenMM.libs/lib/libOpenMMTorch.so
+          patchelf --force-rpath --set-rpath '$ORIGIN:$ORIGIN/../../../torch/lib' ${SITE_PACKAGES}/OpenMM.libs/lib/libOpenMMTorch.so
           for file in ${SITE_PACKAGES}/OpenMM.libs/lib/plugins/*Torch*; do
-            patchelf --set-rpath '$ORIGIN:$ORIGIN/..:$ORIGIN/../../../torch/lib' ${file}
+            patchelf --force-rpath --set-rpath '$ORIGIN:$ORIGIN/..:$ORIGIN/../../../torch/lib' ${file}
           done
 
       - name: "Build wheel"

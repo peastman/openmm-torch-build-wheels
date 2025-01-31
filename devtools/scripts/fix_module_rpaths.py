@@ -15,4 +15,4 @@ for filename in os.listdir('.'):
                     print(rpath)
                     rpath = [r.replace(site_packages, '$ORIGIN') for r in rpath]
                     print(rpath)
-                    subprocess.run(['patchelf', '--set-rpath', ':'.join(rpath), libname], check=True)
+                    subprocess.run(['patchelf', '--force-rpath', '--set-rpath', ':'.join(rpath), libname], check=True)
