@@ -95,6 +95,14 @@ jobs:
           make -j4 install
           make -j4 PythonInstall
 
+      - name: "Fix RPATHs"
+        shell: bash -l {0}
+        run: |
+          patchelf --set-rpath '$ORIGIN:$ORIGIN/../torch/lib' ${SITE_PACKAGES}/OpenMM.libs/lib/libOpenMMTorch.so
+          for file in ${SITE_PACKAGES}/OpenMM.libs/lib/plugins/*Torch*; do
+            patchelf --set-rpath '$ORIGIN:$ORIGIN/..:$ORIGIN/../../../torch/lib' ${file}
+          done
+
       - name: "Build wheel"
         shell: bash -l {0}
         run: |
