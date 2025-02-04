@@ -58,8 +58,7 @@ jobs:
           cmake .. \
             -DCMAKE_INSTALL_PREFIX=${SITE_PACKAGES}/OpenMM.libs \
             -DOPENMM_DIR=${SITE_PACKAGES}/OpenMM.libs \
-            -DTorch_DIR=${SITE_PACKAGES}/torch/share/cmake/Torch \
-            -DCMAKE_CXX_FLAGS='-D_GLIBCXX_USE_CXX11_ABI=0 -Wl,--allow-shlib-undefined'
+            -DTorch_DIR=${SITE_PACKAGES}/torch/share/cmake/Torch
 
       - name: "Build OpenMM-Torch"
         shell: bash -l {0}
