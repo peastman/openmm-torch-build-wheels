@@ -1,0 +1,9 @@
+openmm
+pybind11
+cmake
+swig
+numpy
+delocate
+wheel
+setuptools
+torch
