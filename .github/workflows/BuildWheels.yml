@@ -74,6 +74,7 @@ jobs:
           cd openmm-torch/build/python
           pip wheel -w dist .
           export DYLD_LIBRARY_PATH=${SITE_PACKAGES}/OpenMM.libs:${SITE_PACKAGES}/torch/lib
+          ls ${SITE_PACKAGES}/OpenMM.libs
           cd dist
           export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
           python $GITHUB_WORKSPACE/devtools/scripts/add_plugins_and_headers.py "${SITE_PACKAGES}/OpenMM.libs" "Torch"
