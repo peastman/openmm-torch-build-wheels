@@ -89,6 +89,7 @@ jobs:
             --exclude libOpenMMDrude.dylib \
             --exclude libOpenMMAmoeba.dylib \
             --exclude libOpenMMRPMD.dylib \
+            --exclude libOpenMMTorchOpenCL.dylib \
             --exclude libtorch.dylib \
             --exclude libtorch_cpu.dylib \
             --exclude libc10.dylib
