@@ -76,10 +76,6 @@ jobs:
           cd dist
           export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
           export DYLD_LIBRARY_PATH=${SITE_PACKAGES}/OpenMM.libs/lib:${SITE_PACKAGES}/torch/lib
-          echo "Paths:"
-          echo $DYLD_LIBRARY_PATH
-          ls ${SITE_PACKAGES}/OpenMM.libs
-          ls ${SITE_PACKAGES}/torch/lib
           python $GITHUB_WORKSPACE/devtools/scripts/add_plugins_and_headers.py "${SITE_PACKAGES}/OpenMM.libs" "Torch"
           python -m delocate.cmd.delocate_wheel -w fixed -v openmmtorch*.whl -L "../OpenMM.libs/lib" --sanitize-rpaths \
             --exclude libOpenMM.dylib \
@@ -258,6 +254,7 @@ jobs:
           cd dist
           export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
           python $GITHUB_WORKSPACE/devtools/scripts/add_plugins_and_headers.py "${SITE_PACKAGES}/OpenMM.libs" "Torch" "CUDA"
+          ls -R
           mv OpenMM_Torch*.whl $GITHUB_WORKSPACE/openmm-torch/build/python/dist/fixed
 #
 #      - name: "Build HIP wheel"
