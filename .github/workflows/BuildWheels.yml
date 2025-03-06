@@ -254,8 +254,7 @@ jobs:
           cd dist
           export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
           python $GITHUB_WORKSPACE/devtools/scripts/add_plugins_and_headers.py "${SITE_PACKAGES}/OpenMM.libs" "Torch" "CUDA"
-          ls -R
-          mv OpenMM_Torch*.whl $GITHUB_WORKSPACE/openmm-torch/build/python/dist/fixed
+          mv openmm_torch*.whl $GITHUB_WORKSPACE/openmm-torch/build/python/dist/fixed
 #
 #      - name: "Build HIP wheel"
 #        shell: bash -l {0}
