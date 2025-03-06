@@ -259,7 +259,7 @@ jobs:
           rm -r dist
           cd
           ls -l
-          cd openmm-torch/build
+          cd $GITHUB_WORKSPACE/openmm-torch/build
           make clean
 #
 #      - name: "Build HIP wheel"
