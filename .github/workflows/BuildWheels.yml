@@ -189,7 +189,6 @@ jobs:
           cd openmm-torch/build
           make -j4 install
           make -j4 PythonInstall
-          make clean
 
       - name: "Fix RPATHs"
         shell: bash -l {0}
@@ -260,6 +259,8 @@ jobs:
           rm -r dist
           cd
           ls -l
+          cd openmm-torch/build
+          make clean
 #
 #      - name: "Build HIP wheel"
 #        shell: bash -l {0}
