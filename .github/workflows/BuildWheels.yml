@@ -112,15 +112,22 @@ jobs:
     runs-on: ${{ matrix.os }}
     container:
       image: quay.io/pypa/manylinux_2_28_x86_64
-    name: "${{ matrix.name }} ${{ matrix.python-version}}"
+    name: "${{ matrix.name }} ${{ matrix.python-version}} CUDA ${{ matrix.cuda-version }}"
     strategy:
       matrix:
         python-version: ["3.10"]
+        cuda-version: ["12-8", "13-0"]
         include:
           - name: Linux x86
             os: ubuntu-latest
-            requirements: linux
+            requirements: linux-cuda12
             cuda-version: "12-8"
+            cuda-arch: "x86_64"
+            hip-version: "6"
+          - name: Linux x86
+            os: ubuntu-latest
+            requirements: linux-cuda13
+            cuda-version: "13-0"
             cuda-arch: "x86_64"
             hip-version: "6"
 
@@ -249,7 +256,6 @@ jobs:
           cd $GITHUB_WORKSPACE/devtools/cuda
           export OPENMM_TORCH_VERSION=$(echo $(grep "OPENMM_TORCH_VERSION:" $GITHUB_WORKSPACE/openmm-torch/build/CMakeCache.txt) | cut -d '=' -f2)$VERSION_SUFFIX
           export CUDA_VERSION=$(cut -d '-' -f1 <<< ${{ matrix.cuda-version }})
-          export HIP_VERSION=${{ matrix.hip-version }}
           pip wheel -w dist .
           cd dist
           export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
@@ -288,6 +294,6 @@ jobs:
       - name: "Upload the wheel"
         uses: actions/upload-artifact@v4
         with:
-          name: openmm-torch-wheel-linux-${{matrix.python-version}}
+          name: openmm-torch-wheel-linux-${{matrix.python-version}}-cuda-${{matrix.cuda-version}}
           path: openmm-torch/build/python/dist/fixed
           retention-days: 10
