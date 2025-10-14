@@ -114,6 +114,7 @@ jobs:
       image: quay.io/pypa/manylinux_2_28_x86_64
     name: "${{ matrix.name }} ${{ matrix.python-version}} CUDA ${{ matrix.cuda-version }}"
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.10"]
         cuda-version: ["12-8", "13-0"]
@@ -189,6 +190,7 @@ jobs:
             -DCMAKE_CUDA_HOST_COMPILER=c++ \
             -DOPENCL_INCLUDE_DIR=/usr/include/CL \
             -DOPENCL_LIBRARY=/usr/lib64/libOpenCL.so.1
+          cat CMakeCache.txt
 
       - name: "Build OpenMM-Torch"
         shell: bash -l {0}
