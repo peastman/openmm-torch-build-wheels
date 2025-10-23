@@ -190,6 +190,7 @@ jobs:
             -DCMAKE_CUDA_HOST_COMPILER=c++ \
             -DOPENCL_INCLUDE_DIR=/usr/include/CL \
             -DOPENCL_LIBRARY=/usr/lib64/libOpenCL.so.1
+          ls -R ${SITE_PACKAGES}/OpenMM.libs
 
       - name: "Build OpenMM-Torch"
         shell: bash -l {0}
@@ -206,6 +207,14 @@ jobs:
           for file in ${SITE_PACKAGES}/OpenMM.libs/lib/plugins/*Torch*; do
             patchelf --force-rpath --set-rpath '$ORIGIN:$ORIGIN/..:$ORIGIN/../../../torch/lib' ${file}
           done
+
+      - name: "Free space"
+        shell: bash -l {0}
+        run: |
+          mamba clean
+          pip cache purge
+          cd openmm-torch/build
+          make clean
 
       - name: "Build wheel"
         shell: bash -l {0}
