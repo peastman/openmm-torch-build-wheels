@@ -228,7 +228,6 @@ jobs:
           export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
           python $GITHUB_WORKSPACE/devtools/scripts/add_plugins_and_headers.py "${SITE_PACKAGES}/OpenMM.libs" "Torch" "!CUDA" "!HIP"
           python $GITHUB_WORKSPACE/devtools/scripts/fix_module_rpaths.py
-          for f in openmmtorch*.whl; do echo $f; zipinfo $f; echo ""; done
           auditwheel repair -w fixed -L "/../OpenMM.libs/lib" --plat manylinux_2_34_x86_64 openmmtorch*.whl \
             --exclude libOpenMM.so \
             --exclude libOpenMMTorch.so \
@@ -244,23 +243,21 @@ jobs:
             --exclude libtorch_cuda.so \
             --exclude libc10.so \
             --exclude libc10_cuda.so \
-            --exclude libcuda.so.1 \
-            --exclude libcudart.so.12 \
-            --exclude libcufft.so.11 \
-            --exclude libcufft.so.10 \
-            --exclude libcusparse.so.12 \
-            --exclude libcurand.so.10 \
-            --exclude libcublas.so.12 \
-            --exclude libcublasLt.so.12 \
-            --exclude libcudnn.so.9 \
-            --exclude libcupti.so.12 \
-            --exclude libcusolver.so.11 \
-            --exclude libnccl.so.2 \
-            --exclude libnvrtc.so.11.2 \
-            --exclude libnvrtc.so.12 \
-            --exclude libnvJitLink.so.12 \
-            --exclude libhiprtc.so.6 \
-            --exclude libamdhip64.so.6
+            --exclude libcuda.so.* \
+            --exclude libcudart.so.* \
+            --exclude libcufft.so.* \
+            --exclude libcusparse.so.* \
+            --exclude libcurand.so.* \
+            --exclude libcublas.so.* \
+            --exclude libcublasLt.so.* \
+            --exclude libcudnn.so.* \
+            --exclude libcupti.so.* \
+            --exclude libcusolver.so.* \
+            --exclude libnccl.so.* \
+            --exclude libnvrtc.so.* \
+            --exclude libnvJitLink.so.* \
+            --exclude libhiprtc.so.* \
+            --exclude libamdhip64.so.*
 
       - name: "Build CUDA wheel"
         shell: bash -l {0}
