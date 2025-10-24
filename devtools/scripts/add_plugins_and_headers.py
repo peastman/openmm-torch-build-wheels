@@ -21,4 +21,3 @@ for filename in os.listdir('.'):
     if filename.endswith('.whl'):
         with wheeltools.InWheel(filename, filename):
             shutil.copytree(join(install_dir, 'lib'), 'OpenMM.libs/lib', dirs_exist_ok=True, ignore=ignore)
-            #os.mkdir('openmmtorch')
