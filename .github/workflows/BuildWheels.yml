@@ -112,6 +112,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     container:
       image: quay.io/pypa/manylinux_2_34_x86_64
+      volumes:
+        - /usr/local:/host/usr/local
     name: "${{ matrix.name }} ${{ matrix.python-version}} CUDA ${{ matrix.cuda-version }}"
     strategy:
       fail-fast: false
@@ -134,6 +136,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: "Free disk space"
+        shell: bash -l {0}
+        run: |
+          rm -rf /__t/*
+          rm -rf /host/usr/local/.ghcup
+          rm -rf /host/usr/local/lib/android
 
       - uses: mamba-org/setup-micromamba@v1
         with:
@@ -190,7 +199,6 @@ jobs:
             -DCMAKE_CUDA_HOST_COMPILER=c++ \
             -DOPENCL_INCLUDE_DIR=/usr/include/CL \
             -DOPENCL_LIBRARY=/usr/lib64/libOpenCL.so.1
-          ls -R ${SITE_PACKAGES}/OpenMM.libs
 
       - name: "Build OpenMM-Torch"
         shell: bash -l {0}
@@ -207,14 +215,6 @@ jobs:
           for file in ${SITE_PACKAGES}/OpenMM.libs/lib/plugins/*Torch*; do
             patchelf --force-rpath --set-rpath '$ORIGIN:$ORIGIN/..:$ORIGIN/../../../torch/lib' ${file}
           done
-
-      - name: "Free space"
-        shell: bash -l {0}
-        run: |
-          mamba clean
-          pip cache purge
-          cd openmm-torch/build
-          make clean
 
       - name: "Build wheel"
         shell: bash -l {0}
