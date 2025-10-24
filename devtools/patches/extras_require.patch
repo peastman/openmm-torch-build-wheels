@@ -14,5 +14,5 @@ index db6b9bb..e3490c6 100644
        ext_modules=[extension],
 -      install_requires=['openmm', 'torch']
 +      install_requires=['openmm', 'torch'],
-+      extras_require={f"cuda{CUDA_VERSION}": [f"OpenMM-Torch-CUDA-{CUDA_VERSION}=={version}"], f"hip{HIP_VERSION}": [f"OpenMM-Torch-HIP-{HIP_VERSION}=={version}"]}
++      extras_require={"cuda12": [f"OpenMM-Torch-CUDA-12=={version}"], "cuda13": [f"OpenMM-Torch-CUDA-13=={version}"], "hip6": [f"OpenMM-Torch-HIP-6=={version}", "hip7": [f"OpenMM-Torch-HIP-7=={version}"]}
       )
