@@ -111,21 +111,39 @@ jobs:
   linux:
     runs-on: ${{ matrix.os }}
     container:
-      image: quay.io/pypa/manylinux_2_28_x86_64
-    name: "${{ matrix.name }} ${{ matrix.python-version}}"
+      image: quay.io/pypa/manylinux_2_34_x86_64
+      volumes:
+        - /usr/local:/host/usr/local
+    name: "${{ matrix.name }} ${{ matrix.python-version}} CUDA ${{ matrix.cuda-version }}"
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.10"]
+        cuda-version: ["12-8", "13-0"]
         include:
           - name: Linux x86
             os: ubuntu-latest
-            requirements: linux
+            requirements: linux-cuda12
             cuda-version: "12-8"
+            cuda-arch: "x86_64"
+            hip-version: "6"
+          - name: Linux x86
+            os: ubuntu-latest
+            requirements: linux-cuda13
+            cuda-version: "13-0"
             cuda-arch: "x86_64"
             hip-version: "6"
 
     steps:
       - uses: actions/checkout@v3
+
+      # See https://github.com/jlumbroso/free-disk-space/issues/21.  We can delete more if we need to.
+      - name: "Free disk space"
+        shell: bash -l {0}
+        run: |
+          rm -rf /__t/*
+          rm -rf /host/usr/local/.ghcup
+          rm -rf /host/usr/local/lib/android
 
       - uses: mamba-org/setup-micromamba@v1
         with:
@@ -176,7 +194,7 @@ jobs:
             -DCMAKE_INSTALL_PREFIX=${SITE_PACKAGES}/OpenMM.libs \
             -DOPENMM_DIR=${SITE_PACKAGES}/OpenMM.libs \
             -DTorch_DIR=${SITE_PACKAGES}/torch/share/cmake/Torch \
-            -DCMAKE_CXX_FLAGS='-D_GLIBCXX_USE_CXX11_ABI=0 -Wl,--allow-shlib-undefined' \
+            -DCMAKE_CXX_FLAGS='-D_GLIBCXX_USE_CXX11_ABI=1 -Wl,--allow-shlib-undefined' \
             -DCMAKE_CUDA_ARCHITECTURES=OFF \
             -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc \
             -DCMAKE_CUDA_HOST_COMPILER=c++ \
@@ -210,7 +228,7 @@ jobs:
           export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
           python $GITHUB_WORKSPACE/devtools/scripts/add_plugins_and_headers.py "${SITE_PACKAGES}/OpenMM.libs" "Torch" "!CUDA" "!HIP"
           python $GITHUB_WORKSPACE/devtools/scripts/fix_module_rpaths.py
-          auditwheel repair -w fixed -L ".libs/lib" --plat manylinux_2_28_x86_64 openmmtorch*.whl \
+          auditwheel repair -w fixed -L "/../OpenMM.libs/lib" --plat manylinux_2_34_x86_64 openmmtorch*.whl \
             --exclude libOpenMM.so \
             --exclude libOpenMMTorch.so \
             --exclude libOpenMMHIP.so \
@@ -225,23 +243,21 @@ jobs:
             --exclude libtorch_cuda.so \
             --exclude libc10.so \
             --exclude libc10_cuda.so \
-            --exclude libcuda.so.1 \
-            --exclude libcudart.so.12 \
-            --exclude libcufft.so.11 \
-            --exclude libcufft.so.10 \
-            --exclude libcusparse.so.12 \
-            --exclude libcurand.so.10 \
-            --exclude libcublas.so.12 \
-            --exclude libcublasLt.so.12 \
-            --exclude libcudnn.so.9 \
-            --exclude libcupti.so.12 \
-            --exclude libcusolver.so.11 \
-            --exclude libnccl.so.2 \
-            --exclude libnvrtc.so.11.2 \
-            --exclude libnvrtc.so.12 \
-            --exclude libnvJitLink.so.12 \
-            --exclude libhiprtc.so.6 \
-            --exclude libamdhip64.so.6
+            --exclude libcuda.so.* \
+            --exclude libcudart.so.* \
+            --exclude libcufft.so.* \
+            --exclude libcusparse.so.* \
+            --exclude libcurand.so.* \
+            --exclude libcublas.so.* \
+            --exclude libcublasLt.so.* \
+            --exclude libcudnn.so.* \
+            --exclude libcupti.so.* \
+            --exclude libcusolver.so.* \
+            --exclude libnccl.so.* \
+            --exclude libnvrtc.so.* \
+            --exclude libnvJitLink.so.* \
+            --exclude libhiprtc.so.* \
+            --exclude libamdhip64.so.*
 
       - name: "Build CUDA wheel"
         shell: bash -l {0}
@@ -249,7 +265,6 @@ jobs:
           cd $GITHUB_WORKSPACE/devtools/cuda
           export OPENMM_TORCH_VERSION=$(echo $(grep "OPENMM_TORCH_VERSION:" $GITHUB_WORKSPACE/openmm-torch/build/CMakeCache.txt) | cut -d '=' -f2)$VERSION_SUFFIX
           export CUDA_VERSION=$(cut -d '-' -f1 <<< ${{ matrix.cuda-version }})
-          export HIP_VERSION=${{ matrix.hip-version }}
           pip wheel -w dist .
           cd dist
           export SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
@@ -288,6 +303,6 @@ jobs:
       - name: "Upload the wheel"
         uses: actions/upload-artifact@v4
         with:
-          name: openmm-torch-wheel-linux-${{matrix.python-version}}
+          name: openmm-torch-wheel-linux-${{matrix.python-version}}-cuda-${{matrix.cuda-version}}
           path: openmm-torch/build/python/dist/fixed
           retention-days: 10
