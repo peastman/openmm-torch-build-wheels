@@ -1,7 +1,7 @@
 name: OpenMM-Torch-Build-Wheels
 
 env:
-  GIT_REVISION: 'master'
+  GIT_REVISION: '20d5f3c'
   VERSION_SUFFIX: ''
 
 on:
@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
         os: [macos-latest, macos-13]
         requirements: [macos]
 
@@ -36,7 +36,7 @@ jobs:
       - name: "Install dependencies"
         shell: bash -l {0}
         run: |
-          pip install -v --pre -r devtools/requirements/${{ matrix.requirements }}.txt
+          pip install -v -r devtools/requirements/${{ matrix.requirements }}.txt
 
       - name: "Set SDK on MacOS (if needed)"
         run: source devtools/scripts/install_macos_sdk.sh
@@ -97,7 +97,7 @@ jobs:
           python -m venv "${HOME}/test_env"
           source "${HOME}/test_env/bin/activate"
           cd openmm-torch/build
-          pip install --pre -f python/dist/fixed openmmtorch
+          pip install -f python/dist/fixed openmmtorch
           ls -l python/dist/fixed
 #          python -c "import openmmtorch; f = openmmtorch.TorchForce('tests/forces.pt')"
 
@@ -118,7 +118,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
         cuda-version: ["12-8", "13-0"]
         include:
           - name: Linux x86
@@ -155,7 +155,7 @@ jobs:
       - name: "Install dependencies with pip"
         shell: bash -l {0}
         run: |
-          pip install -v --pre -r devtools/requirements/${{ matrix.requirements }}.txt
+          pip install -v -r devtools/requirements/${{ matrix.requirements }}.txt
 
       - name: "Install dependencies with yum"
         run: |
@@ -296,7 +296,7 @@ jobs:
           source "${HOME}/test_env/bin/activate"
           cd openmm-torch/build
           export CUDA_VERSION=$(cut -d '-' -f1 <<< ${{ matrix.cuda-version }})
-          pip install --pre -f python/dist/fixed openmmtorch[cuda${CUDA_VERSION}]
+          pip install -f python/dist/fixed openmmtorch[cuda${CUDA_VERSION}]
           ls -l python/dist/fixed
 #          python -c "import openmmtorch; f = openmmtorch.TorchForce('tests/forces.pt')"
 
