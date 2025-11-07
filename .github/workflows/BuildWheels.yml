@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
-        os: [macos-latest, macos-13]
+        os: [macos-latest, macos-15-intel]
         requirements: [macos]
 
     steps:
@@ -97,7 +97,7 @@ jobs:
           python -m venv "${HOME}/test_env"
           source "${HOME}/test_env/bin/activate"
           cd openmm-torch/build
-          pip install -f python/dist/fixed openmmtorch
+          pip install --pre -f python/dist/fixed openmmtorch
           ls -l python/dist/fixed
 #          python -c "import openmmtorch; f = openmmtorch.TorchForce('tests/forces.pt')"
 
@@ -296,7 +296,7 @@ jobs:
           source "${HOME}/test_env/bin/activate"
           cd openmm-torch/build
           export CUDA_VERSION=$(cut -d '-' -f1 <<< ${{ matrix.cuda-version }})
-          pip install -f python/dist/fixed openmmtorch[cuda${CUDA_VERSION}]
+          pip install --pre -f python/dist/fixed openmmtorch[cuda${CUDA_VERSION}]
           ls -l python/dist/fixed
 #          python -c "import openmmtorch; f = openmmtorch.TorchForce('tests/forces.pt')"
 
