@@ -1,2 +1,4 @@
 # openmm-torch-build-wheels
-Infrastructure to build Python wheels for OpenMM-Torch
+
+This repository contains infrastructure for building Python wheels for OpenMM-Torch.
+See https://github.com/openmm/openmm-build-wheels for instructions.
